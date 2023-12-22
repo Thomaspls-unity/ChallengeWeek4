@@ -16,11 +16,14 @@ public class PlayerControllerX : MonoBehaviour
     private AudioSource playerAudio;
     public AudioClip moneySound;
     public AudioClip explodeSound;
+    public AudioClip boingSound;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        playerRb = GetComponent<Rigidbody>();
+
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
 
@@ -36,6 +39,17 @@ public class PlayerControllerX : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && !gameOver)
         {
             playerRb.AddForce(Vector3.up * floatForce);
+        }
+
+        if (transform.position.y > 15)
+        {
+            transform.position = new Vector3(transform.position.x, 15, transform.position.z);
+        }
+
+        if (transform.position.y < 0.2 && !gameOver) // If the player goes to the bottom, it bounces up, only if the game isn't over
+        {
+            playerRb.AddForce(Vector3.up * 0.5f, ForceMode.Impulse);
+            playerAudio.PlayOneShot(boingSound, 1.0f);
         }
     }
 
